@@ -4,7 +4,7 @@ ML Project E2E
 First commit to test connection.
 
 # Reminders of code
-Install of packages:
+Installation of packages:
 pip install -r requirements.txt
 
 Python execution:

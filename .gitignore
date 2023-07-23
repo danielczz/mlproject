@@ -123,6 +123,7 @@ celerybeat.pid
 artifacts/
 .env
 .venv
+.vscode
 env/
 venv/
 ENV/
