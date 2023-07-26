@@ -11,6 +11,9 @@ from dataclasses import dataclass
 from src.components.data_transformation import DataTransformation
 from src.components.data_transformation import DataTransformationConfig
 
+from src.components.model_trainer import ModelTrainerConfig
+from src.components.model_trainer import ModelTrainer
+
 # Creating dataclass
 '''
 A data class is a special type of class that is designed to store data
@@ -66,3 +69,8 @@ if __name__=="__main__":
     It will get as result train array, test array and a file on artifacts folder'''
     data_transformation = DataTransformation()
     train_arr,test_arr,_ = data_transformation.initiate_data_transformation(train_data, test_data, raw_data)
+
+    '''Initializing Model Trainer function to execute different in order to choose the best model according to performance.
+    It will return the R2 Square and best model identified.'''
+    modeltrainer = ModelTrainer()
+    print(modeltrainer.initiate_model_trainer(train_arr, test_arr))
