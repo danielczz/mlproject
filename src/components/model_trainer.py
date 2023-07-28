@@ -17,7 +17,7 @@ from xgboost import XGBRegressor
 from src.exception import CustomException
 from src.logger import logging
 
-from src.utils import save_object,evaluate_models
+from src.utils import save_object, evaluate_models
 
 @dataclass
 class ModelTrainerConfig:
@@ -45,20 +45,58 @@ class ModelTrainer:
                 "Decision Tree": DecisionTreeRegressor(),
                 "Gradient Boosting": GradientBoostingRegressor(),
                 "Linear Regression": LinearRegression(),
-                "K-Neighbors Classifier": KNeighborsRegressor(),
-                "XGBClassifier": XGBRegressor(),
-                "AdaBoost Classifier": AdaBoostRegressor(),
+                "K-Neighbors Regressor": KNeighborsRegressor(),
+                "XGBRegressor": XGBRegressor(),
+                "AdaBoost Regressor": AdaBoostRegressor(),
             }
 
-            model_report: dict  = evaluate_models(X_train = X_train, y_train = y_train, X_test = X_test, y_test = y_test, models = models)
+            params={
+                "Decision Tree": {
+                    'criterion':['squared_error', 'friedman_mse', 'absolute_error', 'poisson'],
+                    'splitter':['best', 'random'],
+                    'max_features':['sqrt', 'log2'],
+                },
+                "Random Forest":{
+                    'criterion':['squared_error', 'friedman_mse', 'absolute_error', 'poisson'],
+                    'max_features':['sqrt', 'log2'],
+                    'n_estimators': [8, 16, 32, 64, 128, 256]
+                },
+                "Gradient Boosting":{
+                    'loss':['squared_error', 'huber', 'absolute_error', 'quantile'],
+                    'learning_rate':[0.1, 0.01, 0.05],
+                    'subsample':[0.6, 0.8, 0.9],
+                    'criterion':['squared_error', 'friedman_mse'],
+                    'max_features':['auto', 'log2'],
+                    'n_estimators': [8, 16, 32]
+                },
+                "Linear Regression":{},
+                "K-Neighbors Regressor":{
+                    'n_neighbors':[5, 7, 9, 11],
+                    'weights':['uniform', 'distance'],
+                    'algorithm':['ball_tree', 'kd_tree', 'brute']
+                },
+                "XGBRegressor":{
+                    'learning_rate':[0.1, 0.01, 0.05, 0.001],
+                    'n_estimators': [8, 16, 32, 64, 128, 256]
+                },
+                "AdaBoost Regressor":{
+                    'learning_rate':[0.1, 0.01, 0.5, 0.001],
+                    'loss':['linear', 'square', 'exponential'],
+                    'n_estimators': [8, 16, 32, 64, 128, 256]
+                }
+            }
+
+            logging.info("Evaluation of models started")
+
+            model_report: dict  = evaluate_models(X_train = X_train, y_train = y_train, X_test = X_test, y_test = y_test, models = models, params = params)
             
-            ## To get best model score and model name from dict
+            # To get best model score and model name from dictionary
             best_model_score    = max(sorted(model_report.values()))
             best_model_name     = list(model_report.keys())[list(model_report.values()).index(best_model_score)]
             best_model          = models[best_model_name]
 
-            if best_model_score < 0.6:
-                raise CustomException("No best model found. Performance is under 60%")
+            if best_model_score[0] < 0.6:
+                raise CustomException("No best model found. Performance is under 60%", sys)
             
             logging.info(f"Best model found in training and test data set")
             logging.info(best_model)

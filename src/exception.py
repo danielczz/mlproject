@@ -1,7 +1,6 @@
+# sys helps us to manipulate different part of runtime environment
 import sys
 from src.logger import logging
-
-# sys helps us to manipulate different part of runtime environment
 
 def error_message_detail(error, error_detail:sys):
     _,_,exc_tb = error_detail.exc_info()

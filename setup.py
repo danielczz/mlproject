@@ -24,7 +24,6 @@ packages=find_packages(),
 install_requires=get_requirements("requirements.txt")
 )
 
-
-# Python packages are available on "Python PyPi"
-# Setup.py is the setup script for all activity in building, distributing, and installing modules
-# Helps me manage my ML application as a Package
+# Python packages are available on "Python PyPi".
+# Setup.py is the setup script for all activity in building, distributing, and installing modules.
+# Helps me manage my ML application as a Package.
